@@ -1,21 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Employee } from  "./class/employee"
-
-const EMPLOYEES: Employee[] = [
-  { id: 11, name: 'Mr. Nice' },
-  { id: 12, name: 'Narco' },
-  { id: 13, name: 'Bombasto' },
-  { id: 14, name: 'Celeritas' },
-  { id: 15, name: 'Magneta' },
-  { id: 16, name: 'RubberMan' },
-  { id: 17, name: 'Dynama' },
-  { id: 18, name: 'Dr IQ' },
-  { id: 19, name: 'Magma' },
-  { id: 20, name: 'Tornado' }
-];
+import { EmployeeService } from "./services/employee.service";
+import { OnInit } from '@angular/core';
 
 @Component({
+  providers: [EmployeeService],
   selector: 'my-app',
   template: `  
   <employee-detail [employee]="selectedEmployee"></employee-detail>
@@ -78,13 +68,31 @@ const EMPLOYEES: Employee[] = [
   }
 `],
 })
-export class AppComponent  { 
+export class AppComponent  implements OnInit{ 
+  
+  constructor(private employeeService: EmployeeService)
+  {
+    
+  }
+  
+
   title = 'TTC (Task Tool Control)';  
   selectedEmployee: Employee;
-  employees = EMPLOYEES;
+  employees: Employee[];
 
+  
+  
    onSelect(employee: Employee): void{
    this.selectedEmployee = employee;
+  }
+  getEmployees(): void {
+    // this.employeeService.getEmployees().then(emp =>
+    //  this.employees = emp);    
+      this.employeeService.getEmployeesSlowly().then(emp =>
+      this.employees = emp); 
+  }
+  ngOnInit(): void {
+    this.getEmployees();
   }
  }
 
